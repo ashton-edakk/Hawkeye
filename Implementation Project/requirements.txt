@@ -1,0 +1,6 @@
+opencv-python
+ultralytics
+numpy
+pandas
+sqlalchemy
+requests
