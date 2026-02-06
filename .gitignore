@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+#VEs
+venv/
+.env/
+
+# Training Output
+Implementation project/src/CNN/runs/
+Implementation project/src/CNN/**/*.pt
+Implementation project/src/CNN/**/*.onnx
+
+# Datasets
+Implementation project/src/CNN/datasets/
+
+# Logs
+*.log
+
+#OS
+.DS_Store
+Thumbs.db
+
+#VS Code
+.vscode/
