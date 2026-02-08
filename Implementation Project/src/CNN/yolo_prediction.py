@@ -16,8 +16,8 @@ while True:
     ret, frame = cap.read() #capture frame
     if not ret:
         break
-    
-    results = model(frame, conf=0.01) 
+
+    results = model(frame, conf=0.2) 
 
     annotated = results[0].plot()
     cv2.imshow("Live Feed", annotated)
