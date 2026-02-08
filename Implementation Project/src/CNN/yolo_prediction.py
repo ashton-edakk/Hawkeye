@@ -1,5 +1,32 @@
+import cv2
 from ultralytics import YOLO
+from pathlib import Path
 
-model = YOLO(r"C:\Users\ashto\Documents\440-Group-4-Spring-2026\Implementation Project\src\CNN\runs\detect\train\weights\best.pt")
+BASE_DIR = Path(__file__).resolve().parent
+MODEL_PATH = BASE_DIR/"runs/detect/train/weights/best.pt"
 
-results = model(r"C:\Users\ashto\Documents\440-Group-4-Spring-2026\Implementation Project\src\CNN\datasets\african-wildlife\images\test\1 (179).jpg", conif = 0.01, save=True)
+model = YOLO(MODEL_PATH) #model object
+cap = cv2.VideoCapture(0) #open laptop camera
+
+if not cap.isOpened(): 
+    print("Camera cannot be opened...")
+    exit()
+
+while True:
+    ret, frame = cap.read() #capture frame
+    if not ret:
+        break
+    
+    results = model("test-images/buffalo.png", conf=0.01)
+    #results = model(frame, conf=0.01) 
+
+    annotated = results[0].plot()
+    cv2.imshow("Live Feed", annotated)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'): #if q pressed, exit loop
+        break
+
+#Close camera
+cap.release()
+cv2.destroyAllWindows()
+>>>>>>> 26236014a2d3b611c24d90947009d255e2b846bf
