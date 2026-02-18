@@ -3,7 +3,7 @@ from ultralytics import YOLO
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
-MODEL_PATH = BASE_DIR/"runs/detect/train/weights/best.pt"
+MODEL_PATH = BASE_DIR/"runs/detect/train4/weights/best.pt"
 
 model = YOLO(MODEL_PATH) #model object
 cap = cv2.VideoCapture(0) #open laptop camera
@@ -16,9 +16,8 @@ while True:
     ret, frame = cap.read() #capture frame
     if not ret:
         break
-    
-    results = model(frame, conf=0.01)
-    #results = model(frame, conf=0.01) 
+
+    results = model(frame, conf=0.2) 
 
     annotated = results[0].plot()
     cv2.imshow("Live Feed", annotated)
