@@ -22,6 +22,7 @@ while True:
     annotated = results[0].plot()
     cv2.imshow("Live Feed", annotated)
 
+    print(model.names)
     if cv2.waitKey(1) & 0xFF == ord('q'): #if q pressed, exit loop
         break
 
