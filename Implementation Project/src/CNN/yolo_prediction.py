@@ -33,11 +33,11 @@ def run_detection():
     model = YOLO(MODEL_PATH)
     cap = cv2.VideoCapture(0)
 
-    last_logged = None
     frame_id = 0
     num_frames = 30
+    logged_ids = set()  # track IDs we've already inserted
 
-    print("\n  Initializing camera...")
+    print("\n  Initializing camera >.< ...")
 
     if not cap.isOpened():
         print("  Camera FAILED, u baka — returning to menu.\n")
@@ -53,24 +53,28 @@ def run_detection():
         if not ret:
             break
 
-        results = model(frame, conf=0.2, verbose=False)
-
+        results = model.track(frame, conf=0.2, persist=True, verbose=False)
         annotated = results[0].plot()
         cv2.imshow("Live Feed  |  Press Q to return to menu", annotated)
 
         frame_id += 1
 
         if frame_id % num_frames == 0:
-            for box in results[0].boxes:
-                species = model.names[int(box.cls)]
-                confidence = float(box.conf)
-                if species != last_logged and confidence >= 0.85:
-                    if species == "zebra":
-                        print(f"  ALERT: ZEBRA DETECTED! | Confidence: {confidence:.2f}")
-                    else:
-                        insert_detection(species, confidence)
-                        last_logged = species
-                        print(f"  Detection logged: {species} | Confidence: {confidence:.2f}")
+            boxes = results[0].boxes
+            # .id is None if tracking lost, so guard against it
+            if boxes.id is not None:
+                for box, track_id in zip(boxes, boxes.id):
+                    track_id = int(track_id)
+                    species = model.names[int(box.cls)]
+                    confidence = float(box.conf)
+
+                    if confidence >= 0.85 and track_id not in logged_ids:
+                        logged_ids.add(track_id)
+                        if species == "zebra":
+                            print(f"  ALERT: ZEBRA DETECTED! (ID {track_id}) | Confidence: {confidence:.2f}")
+                        else:
+                            insert_detection(species, confidence)
+                            print(f"  Detection logged: {species} (ID {track_id}) | Confidence: {confidence:.2f}")
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
@@ -85,7 +89,7 @@ def run_dashboard():
     dashboard_path = BASE_DIR.parent / "visualization" / "dashboard.py"
 
     if not dashboard_path.exists():
-        print(f"\n  ✗ Dashboard not found at: {dashboard_path}")
+        print(f"\n  Dashboard not found at: {dashboard_path}")
         print("  Make sure dashboard.py is in the visualization/ folder.\n")
         return
 
