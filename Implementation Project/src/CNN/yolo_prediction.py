@@ -3,7 +3,7 @@ from ultralytics import YOLO
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
-MODEL_PATH = BASE_DIR/"runs/detect/train4/weights/best.pt"
+MODEL_PATH = BASE_DIR/"runs/detect/train3/weights/best.pt"
 
 model = YOLO(MODEL_PATH) #model object
 cap = cv2.VideoCapture(0) #open laptop camera
