@@ -8,7 +8,7 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 from database.supabase_client import insert_detection
 
 BASE_DIR = Path(__file__).resolve().parent
-MODEL_PATH = BASE_DIR / "runs/detect/train4/weights/best.pt"
+MODEL_PATH = BASE_DIR / "runs/detect/train3/weights/best.pt"
 
 
 def print_banner():
@@ -101,7 +101,7 @@ def run_dashboard():
     except KeyboardInterrupt:
         print("\n  Dashboard stopped.")
     except subprocess.CalledProcessError as e:
-        print(f"\n  ✗ Dashboard exited with error: {e}")
+        print(f"\n  Dashboard exited with error: {e}")
 
 
 def main():
