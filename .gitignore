@@ -25,3 +25,6 @@ Thumbs.db
 
 #VS Code
 .vscode/
+
+# Dataset (re-downloadable from Roboflow)
+CS440-Drone-CNN-model-1/
