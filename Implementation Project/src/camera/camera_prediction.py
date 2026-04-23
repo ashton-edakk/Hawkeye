@@ -1,6 +1,8 @@
 from flask import Flask, Response
 from picamera2 import Picamera2
-import cv2
+import io
+from PIL import Image
+#import cv2
 
 app = Flask(__name__)
 
@@ -13,8 +15,10 @@ picam2.start()
 def generate_frames():
     while True:
         frame = picam2.capture_array()
-        _, buffer = cv2.imencode('.jpg', frame)
-        frame_bytes = buffer.tobytes()
+        buffer = io.BytesIO()
+        Image.fromarray(frame).save(buffer, format='JPEG')
+        buffer = buffer.getvalue()
+        frame_bytes = buffer
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
 
