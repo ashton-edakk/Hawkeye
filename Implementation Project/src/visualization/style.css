@@ -1,3 +1,15 @@
+@font-face {
+  font-family: 'Orbitron';
+  src: url('fonts/Orbitron-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+}
+
+@font-face {
+  font-family: 'Electrolize';
+  src: url('fonts/Electrolize-Regular.ttf') format('truetype');
+  font-weight: 400;
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -12,7 +24,7 @@
   --red:        #e57373;
   --radius:     8px;
   --navbar-h:   52px;
-  --font:       'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font:       'Electrolize', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 html, body { height: 100%; overflow: hidden; }
@@ -44,9 +56,10 @@ body {
 }
 
 .brand-name {
+  font-family: 'Orbitron', sans-serif;
   font-size: 15px;
   font-weight: 700;
-  letter-spacing: 0.5px;
+  letter-spacing: 1.5px;
   color: var(--text);
   margin-right: 8px;
   white-space: nowrap;
@@ -181,7 +194,8 @@ body {
   font-size: 13px;
 }
 
-.feed-overlay p { font-size: 14px; font-weight: 500; color: var(--text); }
+.feed-overlay p { font-size: 14px; font-weight: 500; color: var(--text); text-align: center; }
+.feed-overlay span { text-align: center; }
 .feed-overlay code { background: var(--surface-2); padding: 1px 6px; border-radius: 4px; font-size: 11px; }
 
 .right-panel {
