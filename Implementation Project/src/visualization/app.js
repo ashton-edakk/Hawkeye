@@ -15,14 +15,33 @@ let realtimeSub  = null;
 let expandedCard = null;
 
 function initFeed() {
-  const img     = document.getElementById('video-feed');
-  const offline = document.getElementById('feed-offline');
-  const badge   = document.getElementById('stream-badge');
+  const img        = document.getElementById('video-feed');
+  const connecting = document.getElementById('feed-connecting');
+  const offline    = document.getElementById('feed-offline');
+  const badge      = document.getElementById('stream-badge');
+
   badge.textContent = 'Connecting...';
   badge.className   = 'status-badge connecting';
+  img.classList.add('hidden');
+  connecting.classList.remove('hidden');
   offline.classList.add('hidden');
-  img.onload  = () => { badge.textContent = '● Live';    badge.className = 'status-badge live';    offline.classList.add('hidden'); };
-  img.onerror = () => { badge.textContent = '○ Offline'; badge.className = 'status-badge offline'; offline.classList.remove('hidden'); };
+
+  img.onload = () => {
+    badge.textContent = '● Live';
+    badge.className   = 'status-badge live';
+    img.classList.remove('hidden');
+    connecting.classList.add('hidden');
+    offline.classList.add('hidden');
+  };
+
+  img.onerror = () => {
+    badge.textContent = '○ Offline';
+    badge.className   = 'status-badge offline';
+    img.classList.add('hidden');
+    connecting.classList.add('hidden');
+    offline.classList.remove('hidden');
+  };
+
   img.src = CONFIG.PI_STREAM_URL;
 }
 

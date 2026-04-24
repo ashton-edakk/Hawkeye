@@ -64,7 +64,10 @@
             </div>
           </div>
           <div class="feed-container" id="feed-container">
-            <img id="video-feed" src="" alt="Camera stream" class="video-feed" />
+            <img id="video-feed" src="" alt="" class="video-feed hidden" />
+            <div class="feed-overlay" id="feed-connecting">
+              <p>Connecting...</p>
+            </div>
             <div class="feed-overlay hidden" id="feed-offline">
               <p>Stream offline</p>
               <span>Make sure the Pi is running <code>camera_prediction.py</code></span>
@@ -84,7 +87,7 @@
             </div>
             <div class="stat-card">
               <div class="stat-value" id="stat-confidence">—</div>
-              <div class="stat-label">Avg Conf</div>
+              <div class="stat-label">Avg Confidence</div>
             </div>
             <div class="stat-card">
               <div class="stat-value" id="stat-top">—</div>
