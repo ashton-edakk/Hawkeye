@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hawkeye</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="app">
+    <nav class="sidebar">
+      <div class="brand">
+        <span class="brand-name">Hawkeye</span>
+      </div>
+
+      <div class="nav-links">
+        <button class="nav-btn active" data-tab="feed">Live Feed</button>
+        <button class="nav-btn" data-tab="analytics">Analytics</button>
+        <button class="nav-btn" data-tab="settings">Settings</button>
+      </div>
+    </nav>
+
+    <main class="main">
+
+      <div class="tab-pane active" id="tab-feed">
+        <div class="tab-header">
+          <h1>Live Feed</h1>
+          <span class="status-badge connecting" id="stream-badge">Connecting...</span>
+        </div>
+
+        <div class="feed-container">
+          <img id="video-feed" src="" alt="Camera stream" class="video-feed" />
+          <div class="feed-overlay hidden" id="feed-offline">
+            <p>Stream offline</p>
+            <span>Make sure the Pi is running <code>camera_prediction.py</code></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-pane" id="tab-analytics">
+        <div class="tab-header">
+          <h1>Analytics</h1>
+          <button class="icon-btn" id="refresh-btn" title="Refresh data">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+              <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+            </svg>
+            Refresh
+          </button>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-value" id="stat-total">—</div>
+            <div class="stat-label">Total Detections</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-species">—</div>
+            <div class="stat-label">Species Detected</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-confidence">—</div>
+            <div class="stat-label">Avg Confidence</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-top">—</div>
+            <div class="stat-label">Top Species</div>
+          </div>
+        </div>
+
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h2>Detections by Species</h2>
+            <canvas id="chart-species"></canvas>
+          </div>
+          <div class="chart-card">
+            <h2>Detections Over Time</h2>
+            <canvas id="chart-timeline"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <h2>Activity Heatmap <span class="chart-subtitle">hour of day &times; day of week</span></h2>
+          <div id="heatmap-container"></div>
+        </div>
+
+        <div class="chart-card">
+          <h2>Recent Detections</h2>
+          <div class="table-wrapper">
+            <table class="detections-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Species</th>
+                  <th>Confidence</th>
+                  <th>Timestamp</th>
+                </tr>
+              </thead>
+              <tbody id="detections-tbody">
+                <tr><td colspan="4" class="empty-row">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-pane" id="tab-settings">
+        <div class="tab-header">
+          <h1>Settings</h1>
+          <button class="icon-btn" id="check-status-btn" title="Re-check status">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+              <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+            </svg>
+            Check Status
+          </button>
+        </div>
+
+        <div class="settings-section">
+          <h2 class="section-label">System Status</h2>
+          <div class="status-cards">
+
+            <div class="status-card">
+              <div class="status-card-header">
+                <span class="status-card-title">Pi Camera Stream</span>
+                <span class="status-dot checking" id="pi-dot"></span>
+              </div>
+              <div class="status-detail" id="pi-status-text">Checking...</div>
+              <code class="status-url">http://10.0.0.21:5000/video_feed</code>
+            </div>
+
+            <div class="status-card">
+              <div class="status-card-header">
+                <span class="status-card-title">Supabase Database</span>
+                <span class="status-dot checking" id="db-dot"></span>
+              </div>
+              <div class="status-detail" id="db-status-text">Checking...</div>
+              <code class="status-url" id="db-url-display">—</code>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h2 class="section-label">Configuration</h2>
+          <div class="config-table">
+            <div class="config-row">
+              <span class="config-key">Pi IP Address</span>
+              <code class="config-val">10.0.0.21</code>
+            </div>
+            <div class="config-row">
+              <span class="config-key">Stream Port</span>
+              <code class="config-val">5000</code>
+            </div>
+            <div class="config-row">
+              <span class="config-key">Stream Endpoint</span>
+              <code class="config-val">/video_feed</code>
+            </div>
+            <div class="config-row">
+              <span class="config-key">Database Table</span>
+              <code class="config-val">Detections</code>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

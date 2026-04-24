@@ -28,3 +28,6 @@ Thumbs.db
 
 # Dataset (re-downloadable from Roboflow)
 CS440-Drone-CNN-model-1/
+
+# UI credentials (use config.example.js as template)
+Implementation Project/src/visualization/config.js
