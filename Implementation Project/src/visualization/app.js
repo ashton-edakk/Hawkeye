@@ -235,6 +235,15 @@ function renderHeatmap(data) {
     }
     container.appendChild(row);
   });
+
+  const legend = document.createElement('div');
+  legend.className = 'heatmap-legend';
+  legend.innerHTML = `
+    <span class="heatmap-legend-label">Less</span>
+    <div class="heatmap-legend-gradient"></div>
+    <span class="heatmap-legend-label">More</span>
+  `;
+  container.appendChild(legend);
 }
 
 function heatColor(t) {
