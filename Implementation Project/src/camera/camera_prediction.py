@@ -15,6 +15,8 @@ picam2.start()
 def generate_frames():
     while True:
         frame = picam2.capture_array()
+        # need this its in pi
+        frame = frame[:, :, ::-1]
         buffer = io.BytesIO()
         Image.fromarray(frame).save(buffer, format='JPEG')
         buffer = buffer.getvalue()
