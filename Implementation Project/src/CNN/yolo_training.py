@@ -10,7 +10,7 @@ from roboflow import Roboflow
 
 def main():
     # Download dataset from Roboflow
-    rf = Roboflow(api_key="rnkQazKZ1p4ibFE0Kq4Z")
+    rf = Roboflow(api_key="api-key-here")
     project = rf.workspace("project-house-gsz5t").project("cs440-drone-cnn-model")
     version = project.version(1)
     dataset = version.download("yolo26")
