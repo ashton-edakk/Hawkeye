@@ -1,18 +1,16 @@
-# CS 440 Group 4 - Implementation Project
+# Hawkeye: Drone System to Monitor Animals
 
-## Hawkeye: Drone System to Monitor Animals
-
-This folder contains the Spring 2026 implementation artifacts for the Hawkeye prototype, including source code, implementation documentation, and presentation materials.
+This folder contains the implementation artifacts for the Hawkeye prototype, including source code, implementation documentation, reports, and presentation materials.
 
 ## What Is In This Folder
 
 ### Implementation documents
-- `Implementation Project Report.pdf.pdf`  
-  Final implementation report (deliverables, testing, inspection, conclusions, issues).
-- `Drone System to Monitor Animals Summary.pdf`  
-  Short implementation summary document.
-- `CS 440 Group 4 Implementation Presentation.pptx`  
-  Implementation presentation deck.
+- `HawkeyeFinalReport.pdf`  
+  Final Hawkeye report (deliverables, testing, inspection, conclusions, issues).
+- `HawkeyeSummary.pdf`  
+  Short summary document.
+- `HawkeyePresentation.pptx`  
+  Hawkeye presentation deck.
 
 ### Source code
 - `src/CNN/yolo_prediction.py`  
@@ -81,7 +79,7 @@ SUPABASE_KEY=...
 
 ## Typical Run Commands
 
-From `Implementation Project/`:
+From `Hawkeye/`:
 
 ```bash
 python src/CNN/yolo_prediction.py
