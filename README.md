@@ -1,35 +1,100 @@
-# CS 440 Group 4 - Spring 2026
+# CS 440 Group 4 - Implementation Project
 
-This repository contains Group 4 coursework deliverables for CS 440, including design documentation, implementation artifacts, weekly reports, and returned instructor checklists.
+## Hawkeye: Drone System to Monitor Animals
 
->Group 28 (L. Cruz, O. Neal, E. Aguayo, T. Kang), "Drone System to Monitor Animals," CS 440 Project Design Document, University of Illinois Chicago, Spring 2025. These indivduals are the ones whose Design Project we implemented in our Implementation Project. Their Design Doc was very helpful.
+This folder contains the Spring 2026 implementation artifacts for the Hawkeye prototype, including source code, implementation documentation, and presentation materials.
 
-## Repository Layout
+## What Is In This Folder
 
-- `Design Project/`
-  - SubterraView design-phase reports, summaries, use case forms, and presentation files.
-  - Main guide: `Design Project/README.md`
+### Implementation documents
+- `Implementation Project Report.pdf.pdf`  
+  Final implementation report (deliverables, testing, inspection, conclusions, issues).
+- `Drone System to Monitor Animals Summary.pdf`  
+  Short implementation summary document.
+- `CS 440 Group 4 Implementation Presentation.pptx`  
+  Implementation presentation deck.
 
-- `Implementation Project/`
-  - Hawkeye drone animal detection implementation artifacts (source code, implementation report, summary, and presentation).
-  - Main guide: `Implementation Project/README.md`
+### Source code
+- `src/CNN/yolo_prediction.py`  
+  Main YOLO detection app with menu flow and detection logging.
+- `src/CNN/yolo_training.py`  
+  Roboflow + YOLOv26 training script.
+- `src/database/supabase_client.py`  
+  Supabase client initialization and insert helper.
+- `src/camera/camera_prediction.py`  
+  Flask MJPEG stream server for Raspberry Pi camera feed.
+- `src/camera/pi_prediction.py`  
+  Detection client that consumes the Pi MJPEG feed and performs logging/tracking.
 
-- `Weekly Reports/`
-  - Weekly progress report documents.
+## Current Runtime Flow
 
-## Project Context
+### Laptop/local camera detection
+- Entry point: `src/CNN/yolo_prediction.py`
+- Loads model from `src/CNN/runs/detect/train4/weights/best.pt`
+- Runs YOLO tracking and logs detections above confidence threshold
+- Uses unique track IDs to reduce duplicate inserts
 
-There are two distinct projec in this repository:
+### Raspberry Pi streaming + detection path
+1. Start stream server on Pi:
+   - `src/camera/camera_prediction.py`
+   - Serves MJPEG at `/video_feed` on port `5000`
+2. Run detector client:
+   - `src/camera/pi_prediction.py`
+   - Connects to Pi stream (`http://<PI_IP>:5000/video_feed`)
+   - Runs YOLO + tracking + Supabase inserts
 
-1. **Design track (SubterraView)**  
-   AR/AI underground infrastructure mapping and hazard-awareness system concept.
+## Dependencies
 
-2. **Implementation track (Hawkeye)**  
-   Real-time animal detection prototype using YOLO, camera streaming, and Supabase logging.
+Declared in `requirements.txt`:
+- `opencv-python`
+- `ultralytics`
+- `numpy`
+- `pandas`
+- `sqlalchemy`
+- `requests`
 
-## Documentation Entry Points
+Also used by source:
+- `supabase`
+- `python-dotenv`
+- `flask`
+- `pillow`
+- `roboflow` (training script)
+- `picamera2` (Pi camera streaming script)
 
-- `Design Project/README.md`
-- `Implementation Project/README.md`
+Install baseline:
 
-These Markdown READMEs are the current canonical docs for this branch.
+```bash
+pip install -r requirements.txt
+pip install supabase python-dotenv flask pillow roboflow picamera2
+```
+
+## Environment Configuration
+
+Create `src/CNN/.env`:
+
+```env
+SUPABASE_URL=...
+SUPABASE_KEY=...
+```
+
+`src/database/supabase_client.py` reads this file to initialize Supabase.
+
+## Typical Run Commands
+
+From `Implementation Project/`:
+
+```bash
+python src/CNN/yolo_prediction.py
+```
+
+For Pi stream server:
+
+```bash
+python src/camera/camera_prediction.py
+```
+
+For Pi detection client:
+
+```bash
+python src/camera/pi_prediction.py
+```
